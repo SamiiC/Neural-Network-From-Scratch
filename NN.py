@@ -38,9 +38,11 @@ def init_params():
     b2 = np.random.rand(10, 1) - 0.5
     return W1, b1, W2, b2
 
+# non-linear activation function to add complexity to hidden layers and make the NN work
 def ReLU(Z):
     return np.maximum(Z, 0)
 
+#This is an activation function, converting output layer to probabilities
 def softmax(Z):
     A = np.exp(Z) / sum(np.exp(Z))
     return A
@@ -53,6 +55,10 @@ def forward_prop(W1, b1, W2, b2, X):
    A2 = softmax(Z2)  #A2 values to probabilities
    return Z1, A1, Z2, A2
 
+
+#encodes training examples to make it easier for algorithm to 
+#get a better prediction
+
 def one_hot(Y):
     one_hot_Y = np.zeros((Y.size, Y.max() + 1))
     one_hot_Y[np.arange(Y.size), Y] = 1
@@ -60,8 +66,13 @@ def one_hot(Y):
     return one_hot_Y
 
 def deriv_ReLU(Z):
-   # find gradient of ReLU function for backprop
+   # find gradient of ReLU function for backpropagation
    return Z > 0
+
+
+#takes previously made pred and runs it backwards through the nn
+#This determines which weights and biases contributed the most to the error
+#So it modifies those accordingly
 
 def back_prop(Z1, A1, Z2, A2, W1, W2, X, Y):
     one_hot_Y = one_hot(Y)
@@ -87,6 +98,7 @@ def get_accuracy(predictions, Y):
     print(predictions, Y)
     return np.sum(predictions == Y) / Y.size
 
+#this decides how to tune weights & biases to reduce error by the highest amount 
 def grad_descent(X, Y, alpha, iterations):
     W1, b1, W2, b2 = init_params()
     for i in range(iterations):
@@ -101,7 +113,7 @@ def grad_descent(X, Y, alpha, iterations):
 
 
 
-W1, b1, W2, b2 = grad_descent(X_train, Y_train, 0.5, 450)
+W1, b1, W2, b2 = grad_descent(X_train, Y_train, 0.5, 400)
 
 
 #graphing
@@ -123,7 +135,15 @@ def test_prediction(index, W1, b1, W2, b2):
     plt.show()
 
 
-x = int(input("Enter an integer: "))
+
+x = int(input("Enter an integer:"))
+while x !=0:
+    test_prediction(x,W1,b1,W2,b2)
+    x = int(input("Enter an integer:"))
+
+
+
+
 
 
 #test on other dataset we didn't train on
